@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetainPulse — Customer Retention & Churn Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #F8F6F1;
+      --bg-warm: #EFECE4;
+      --surface: #FFFFFF;
+      --ink: #171614;
+      --ink-soft: #57534E;
+      --ink-muted: #8A837A;
+      --border: #E5E0D5;
+      --border-strong: #D1C9BA;
+
+      /* Expressive Editorial Palette */
+      --terracotta: #D95D39;
+      --terracotta-soft: #FBECE7;
+      --emerald: #136F63;
+      --emerald-soft: #E5F4F1;
+      --amber: #D9822B;
+      --amber-soft: #FDF3E6;
+      --cobalt: #2B59C3;
+      --cobalt-soft: #EAF0FC;
+      --plum: #6B3FA0;
+      --plum-soft: #F3ECFA;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      background-image:
+        radial-gradient(at 0% 0%, rgba(217, 93, 57, 0.08) 0px, transparent 48%),
+        radial-gradient(at 100% 10%, rgba(19, 111, 99, 0.08) 0px, transparent 45%),
+        radial-gradient(at 80% 100%, rgba(43, 89, 195, 0.07) 0px, transparent 50%);
+      color: var(--ink);
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Color Accent Strip */
+    .top-ribbon {
+      height: 5px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--terracotta) 0%, var(--amber) 33%, var(--emerald) 66%, var(--cobalt) 100%);
+    }
+
+    .wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px 56px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      padding-bottom: 28px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--terracotta);
+      margin-bottom: 6px;
+    }
+
+    .brand-eyebrow .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 0 3px var(--emerald-soft);
+    }
+
+    h1 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: clamp(2.1rem, 3.5vw, 2.85rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .subtitle {
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+      margin-top: 6px;
+      max-width: 540px;
+    }
+
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .preset-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-right: 4px;
+    }
+
+    .btn-preset {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 15px;
+      border-radius: 999px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--ink);
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 2px 6px rgba(23, 22, 20, 0.04);
+    }
+
+    .btn-preset:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(23, 22, 20, 0.08);
+    }
+
+    .btn-preset.risk:hover {
+      border-color: var(--terracotta);
+      background: var(--terracotta-soft);
+      color: #9E381B;
+    }
+
+    .btn-preset.loyal:hover {
+      border-color: var(--emerald);
+      background: var(--emerald-soft);
+      color: #0D4F46;
+    }
+
+    .swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    /* Layout Grid */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form Sections */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 30px -10px rgba(23, 22, 20, 0.07);
+    }
+
+    .group-block {
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .group-block:last-of-type {
+      border-bottom: none;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .group-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag-demo { background: var(--cobalt-soft); color: var(--cobalt); }
+    .tag-bill { background: var(--amber-soft); color: #A65E14; }
+    .tag-serv { background: var(--plum-soft); color: var(--plum); }
+
+    .group-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .fields-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    @media (max-width: 580px) {
+      .fields-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 580px) {
+      .field.full {
+        grid-column: span 1;
+      }
+    }
+
+    label {
+      font-size: 0.81rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    label span.hint {
+      font-weight: 500;
+      color: var(--ink-muted);
+      font-size: 0.75rem;
+    }
+
+    select,
+    input {
+      appearance: none;
+      background-color: var(--bg-cream);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 11px 14px;
+      font-size: 0.91rem;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all 0.16s ease;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2357534E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    select:hover,
+    input:hover {
+      border-color: var(--border-strong);
+      background-color: #F3EFE6;
+    }
+
+    select:focus,
+    input:focus {
+      outline: none;
+      background-color: var(--surface);
+      border-color: var(--cobalt);
+      box-shadow: 0 0 0 3px var(--cobalt-soft);
+    }
+
+    /* Segmented Pills for Streaming Services */
+    .segmented-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: var(--bg-cream);
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .seg-btn {
+      border: none;
+      background: transparent;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--plum);
+      box-shadow: 0 2px 6px rgba(23, 22, 20, 0.08);
+    }
+
+    /* Submit CTA */
+    .cta-btn {
+      width: 100%;
+      margin-top: 14px;
+      background: var(--ink);
+      color: #FFFFFF;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.96rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 8px 20px -4px rgba(23, 22, 20, 0.28);
+    }
+
+    .cta-btn:hover {
+      background: var(--terracotta);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px -4px rgba(217, 93, 57, 0.38);
+    }
+
+    .cta-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Right Column: Analysis Sheet */
+    .result-panel {
+      position: sticky;
+      top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 14px 34px -10px rgba(23, 22, 20, 0.09);
+    }
+
+    .result-banner {
+      padding: 18px 24px;
+      background: var(--bg-warm);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-banner span {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+    }
+
+    .live-chip {
+      font-size: 0.73rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--emerald);
+      border: 1px solid var(--border);
+    }
+
+    .result-body {
+      padding: 28px 24px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 36px 14px;
+    }
+
+    .empty-art {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--terracotta-soft), var(--amber-soft));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--terracotta);
+    }
+
+    .empty-state h3 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+
+    .empty-state p {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* Populated State */
+    .score-stage {
+      display: none;
+    }
+
+    .hero-score {
+      padding: 22px;
+      border-radius: 16px;
+      background: var(--bg-cream);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .score-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .score-number {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 3.4rem;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+
+    .score-caption {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .risk-badge {
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* Multi-color Threshold Meter */
+    .meter-track {
+      height: 10px;
+      width: 100%;
+      background: #E6E1D6;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+    }
+
+    .meter-scale {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.71rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-top: 6px;
+    }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .mini-stat {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .mini-stat .k {
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat .v {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .playbook-card {
+      padding: 16px 18px;
+      border-radius: 14px;
+      border-left: 4px solid var(--emerald);
+      background: var(--emerald-soft);
+      transition: all 0.25s ease;
+    }
+
+    .playbook-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .playbook-text {
+      font-size: 0.87rem;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    .error-msg {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--terracotta-soft);
+      border: 1px solid rgba(217, 93, 57, 0.35);
+      color: #9E381B;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-ribbon"></div>
+
+  <div class="wrapper">
+    <header>
+      <div>
+        <div class="brand-eyebrow"><span class="dot"></span> RetainPulse Intelligence</div>
+        <h1>Customer <em>Churn</em> & Retention Studio</h1>
+        <p class="subtitle">Evaluate subscriber attrition probability in real time and generate tailored retention playbooks.</p>
+      </div>
+
+      <div class="preset-bar">
+        <span class="preset-label">Quick profiles:</span>
+        <button type="button" class="btn-preset risk" onclick="loadPreset('high')">
+          <span class="swatch" style="background: var(--terracotta);"></span> At-Risk Subscriber
+        </button>
+        <button type="button" class="btn-preset loyal" onclick="loadPreset('low')">
+          <span class="swatch" style="background: var(--emerald);"></span> Long-Term Loyal
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <!-- Left: Subscriber Profile Form -->
+      <form id="churnForm" class="panel">
+        <!-- Group 1 -->
+        <div class="group-block">
+          <div class="group-header">
+            <span class="group-tag tag-demo">01</span>
+            <h2 class="group-title">Subscriber Demographics</h2>
+          </div>
+          <div class="fields-grid">
+            <div class="field">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="SeniorCitizen">Senior Citizen</label>
+              <select id="SeniorCitizen" name="SeniorCitizen">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="Partner">Partner</label>
+              <select id="Partner" name="Partner">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="Dependents">Dependents</label>
+              <select id="Dependents" name="Dependents">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2 -->
+        <div class="group-block">
+          <div class="group-header">
+            <span class="group-tag tag-bill">02</span>
+            <h2 class="group-title">Contract & Billing Profile</h2>
+          </div>
+          <div class="fields-grid">
+            <div class="field">
+              <label for="tenure">Account Tenure <span class="hint">Months</span></label>
+              <input type="number" id="tenure" name="tenure" min="0" max="120" value="14" required />
+            </div>
+            <div class="field">
+              <label for="MonthlyCharges">Monthly Charges <span class="hint">USD ($)</span></label>
+              <input type="number" id="MonthlyCharges" name="MonthlyCharges" step="1" min="0.01" value="74.90" required />
+            </div>
+            <div class="field">
+              <label for="Contract">Contract Term</label>
+              <select id="Contract" name="Contract">
+                <option value="Month-to-month">Month-to-month</option>
+                <option value="One year">One year</option>
+                <option value="Two year">Two year</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="PaperlessBilling">Paperless Billing</label>
+              <select id="PaperlessBilling" name="PaperlessBilling">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="PaymentMethod">Payment Method</label>
+              <select id="PaymentMethod" name="PaymentMethod">
+                <option value="Electronic check">Electronic check</option>
+                <option value="Mailed check">Mailed check</option>
+                <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                <option value="Credit card (automatic)">Credit card (automatic)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 3 -->
+        <div class="group-block">
+          <div class="group-header">
+            <span class="group-tag tag-serv">03</span>
+            <h2 class="group-title">Connectivity & Add-On Services</h2>
+          </div>
+          <div class="fields-grid">
+            <div class="field">
+              <label for="InternetService">Internet Infrastructure</label>
+              <select id="InternetService" name="InternetService">
+                <option value="Fiber optic">Fiber optic</option>
+                <option value="DSL">DSL</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="MultipleLines">Multiple Phone Lines</label>
+              <select id="MultipleLines" name="MultipleLines">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="No phone service">No phone service</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="OnlineSecurity">Online Security</label>
+              <select id="OnlineSecurity" name="OnlineSecurity">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="No internet service">No internet service</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="OnlineBackup">Cloud Backup</label>
+              <select id="OnlineBackup" name="OnlineBackup">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="No internet service">No internet service</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="DeviceProtection">Device Protection</label>
+              <select id="DeviceProtection" name="DeviceProtection">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="No internet service">No internet service</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="TechSupport">Priority Tech Support</label>
+              <select id="TechSupport" name="TechSupport">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="No internet service">No internet service</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label>Streaming Bundle <span class="hint">TV & Movies combined</span></label>
+              <input type="hidden" id="StreamingServices" name="StreamingServices" value="None" />
+              <div class="segmented-group" id="streamPills">
+                <button type="button" class="seg-btn active" data-val="None">None</button>
+                <button type="button" class="seg-btn" data-val="Single">Single Service</button>
+                <button type="button" class="seg-btn" data-val="Both">Both Services</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="cta-btn">
+          <span>Calculate Churn Risk</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+
+        <div id="errorMsg" class="error-msg"></div>
+      </form>
+
+      <!-- Right: Editorial Diagnostic Output -->
+      <aside class="result-panel">
+        <div class="result-banner">
+          <span>Retention Diagnostic</span>
+          <span class="live-chip">XGBoost Pipeline</span>
+        </div>
+
+        <div class="result-body">
+          <div id="emptyState" class="empty-state">
+            <div class="empty-art">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+            </div>
+            <h3>Awaiting Subscriber Data</h3>
+            <p>Adjust the customer attributes on the left or pick a sample profile to run a live churn assessment.</p>
+          </div>
+
+          <div id="scoreStage" class="score-stage">
+            <div class="hero-score">
+              <div class="score-top">
+                <div>
+                  <div id="probDisplay" class="score-number">0.0%</div>
+                  <div class="score-caption">Churn Probability</div>
+                </div>
+                <span id="riskBadge" class="risk-badge">Low Risk</span>
+              </div>
+
+              <div class="meter-track">
+                <div id="meterFill" class="meter-fill"></div>
+              </div>
+              <div class="meter-scale">
+                <span>0% Safe</span>
+                <span>40% Watch</span>
+                <span>70%+ Critical</span>
+              </div>
+            </div>
+
+            <div class="summary-cards">
+              <div class="mini-stat">
+                <div class="k">Projected Status</div>
+                <div id="statusVal" class="v">—</div>
+              </div>
+              <div class="mini-stat">
+                <div class="k">Model Decision</div>
+                <div id="classVal" class="v">—</div>
+              </div>
+            </div>
+
+            <div id="playbookCard" class="playbook-card">
+              <div id="playbookTitle" class="playbook-title">Recommended Action</div>
+              <p id="playbookText" class="playbook-text"></p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const form = document.getElementById("churnForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const errorMsg = document.getElementById("errorMsg");
+    const streamHidden = document.getElementById("StreamingServices");
+    const streamButtons = document.querySelectorAll("#streamPills .seg-btn");
+
+    // Interactive segmented control for StreamingServices
+    streamButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        streamButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        streamHidden.value = btn.dataset.val;
+      });
+    });
+
+    function setStreamingValue(val) {
+      streamHidden.value = val;
+      streamButtons.forEach((b) => {
+        b.classList.toggle("active", b.dataset.val === val);
+      });
+    }
+
+    const presets = {
+      high: {
+        gender: "Female",
+        SeniorCitizen: "1",
+        Partner: "No",
+        Dependents: "No",
+        tenure: 2,
+        MonthlyCharges: 98.50,
+        Contract: "Month-to-month",
+        PaperlessBilling: "Yes",
+        PaymentMethod: "Electronic check",
+        InternetService: "Fiber optic",
+        MultipleLines: "Yes",
+        OnlineSecurity: "No",
+        OnlineBackup: "No",
+        DeviceProtection: "No",
+        TechSupport: "No",
+        StreamingServices: "Both"
+      },
+      low: {
+        gender: "Male",
+        SeniorCitizen: "0",
+        Partner: "Yes",
+        Dependents: "Yes",
+        tenure: 62,
+        MonthlyCharges: 66.25,
+        Contract: "Two year",
+        PaperlessBilling: "No",
+        PaymentMethod: "Bank transfer (automatic)",
+        InternetService: "DSL",
+        MultipleLines: "Yes",
+        OnlineSecurity: "Yes",
+        OnlineBackup: "Yes",
+        DeviceProtection: "Yes",
+        TechSupport: "Yes",
+        StreamingServices: "Single"
+      }
+    };
+
+    function loadPreset(type) {
+      const data = presets[type];
+      for (const [key, value] of Object.entries(data)) {
+        if (key === "StreamingServices") {
+          setStreamingValue(value);
+        } else {
+          const field = document.getElementById(key);
+          if (field) field.value = value;
+        }
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorMsg.style.display = "none";
+      submitBtn.disabled = true;
+      submitBtn.querySelector("span").textContent = "Running Diagnostic...";
+
+      const payload = {
+        gender: document.getElementById("gender").value,
+        SeniorCitizen: parseInt(document.getElementById("SeniorCitizen").value, 10),
+        Partner: document.getElementById("Partner").value,
+        Dependents: document.getElementById("Dependents").value,
+        tenure: parseInt(document.getElementById("tenure").value, 10),
+        MultipleLines: document.getElementById("MultipleLines").value,
+        InternetService: document.getElementById("InternetService").value,
+        OnlineSecurity: document.getElementById("OnlineSecurity").value,
+        OnlineBackup: document.getElementById("OnlineBackup").value,
+        DeviceProtection: document.getElementById("DeviceProtection").value,
+        TechSupport: document.getElementById("TechSupport").value,
+        StreamingServices: streamHidden.value,
+        Contract: document.getElementById("Contract").value,
+        PaperlessBilling: document.getElementById("PaperlessBilling").value,
+        PaymentMethod: document.getElementById("PaymentMethod").value,
+        MonthlyCharges: parseFloat(document.getElementById("MonthlyCharges").value)
+      };
+
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Unable to complete prediction.");
+
+        updateDiagnostic(data);
+      } catch (err) {
+        errorMsg.textContent = err.message;
+        errorMsg.style.display = "block";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.querySelector("span").textContent = "Calculate Churn Risk";
+      }
+    });
+
+    function updateDiagnostic(data) {
+      document.getElementById("emptyState").style.display = "none";
+      document.getElementById("scoreStage").style.display = "block";
+
+      const prob = data.churn_probability;
+      const risk = data.risk_level;
+
+      const probDisplay = document.getElementById("probDisplay");
+      const riskBadge = document.getElementById("riskBadge");
+      const meterFill = document.getElementById("meterFill");
+      const playbookCard = document.getElementById("playbookCard");
+      const playbookTitle = document.getElementById("playbookTitle");
+      const playbookText = document.getElementById("playbookText");
+
+      probDisplay.textContent = prob.toFixed(1) + "%";
+      meterFill.style.width = Math.min(prob, 100) + "%";
+
+      document.getElementById("statusVal").textContent =
+        data.churn_label === "Yes" ? "At Risk of Leaving" : "Stable Retention";
+      document.getElementById("classVal").textContent =
+        data.churn_prediction === 1 ? "Churn (1)" : "Retain (0)";
+
+      if (risk === "High Risk") {
+        probDisplay.style.color = "var(--terracotta)";
+        meterFill.style.backgroundColor = "var(--terracotta)";
+        riskBadge.textContent = "High Risk";
+        riskBadge.style.background = "var(--terracotta-soft)";
+        riskBadge.style.color = "#9E381B";
+
+        playbookCard.style.background = "var(--terracotta-soft)";
+        playbookCard.style.borderLeftColor = "var(--terracotta)";
+        playbookTitle.style.color = "#9E381B";
+        playbookTitle.textContent = "Priority Intervention";
+        playbookText.textContent =
+          "Offer an immediate 12-month contract rate lock with 15% loyalty credit and bundle complimentary Online Security or Tech Support.";
+      } else if (risk === "Medium Risk") {
+        probDisplay.style.color = "var(--amber)";
+        meterFill.style.backgroundColor = "var(--amber)";
+        riskBadge.textContent = "Moderate Watch";
+        riskBadge.style.background = "var(--amber-soft)";
+        riskBadge.style.color = "#9A5410";
+
+        playbookCard.style.background = "var(--amber-soft)";
+        playbookCard.style.borderLeftColor = "var(--amber)";
+        playbookTitle.style.color = "#9A5410";
+        playbookTitle.textContent = "Proactive Engagement";
+        playbookText.textContent =
+          "Enroll subscriber in an automatic payment discount incentive and schedule a 30-day service satisfaction check-in.";
+      } else {
+        probDisplay.style.color = "var(--emerald)";
+        meterFill.style.backgroundColor = "var(--emerald)";
+        riskBadge.textContent = "Healthy Retention";
+        riskBadge.style.background = "var(--emerald-soft)";
+        riskBadge.style.color = "#0D4F46";
+
+        playbookCard.style.background = "var(--emerald-soft)";
+        playbookCard.style.borderLeftColor = "var(--emerald)";
+        playbookTitle.style.color = "#0D4F46";
+        playbookTitle.textContent = "Maintain & Upsell";
+        playbookText.textContent =
+          "Strong loyalty indicators. Eligible for multi-year renewal rewards or targeted add-on upgrades without discounting.";
+      }
+    }
+  </script>
+</body>
+</html>
